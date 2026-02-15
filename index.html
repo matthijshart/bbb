@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Box 3 zonder gedoe</title>
+  <meta name="description" content="Ontworpen om box 3 invoer doenbaar te maken." />
+
+  <!-- Icons -->
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+
+  <!-- PWA (optional) -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#f7fbff">
+
+  <!-- Social preview -->
+  <meta property="og:title" content="Box 3 zonder gedoe">
+  <meta property="og:description" content="Ontworpen om box 3 invoer “doenbaar” te maken. Scroll om de flow te zien.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body>
+  <!-- Scroll progress bar -->
+  <div class="progressWrap" aria-hidden="true">
+    <div class="progressTrack">
+      <div class="progressBar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Screen 1: ONLY text -->
+    <section class="screen" aria-label="Intro">
+      <div class="wrap screenInner">
+        <h1 class="heroTitle"><span class="grad">Box 3</span> zonder gedoe</h1>
+        <p class="heroSub">Ontworpen om box 3 invoer “doenbaar” te maken.</p>
+      </div>
+    </section>
+
+    <!-- Screen 2 -->
+    <section class="screen" aria-label="Upload">
+      <div class="wrap screenInner">
+        <div class="card reveal">
+          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 1</span>
+          <h2>Upload je overzichten.</h2>
+          <p>Sleep je bank‑ en brokerexports in één map. Klaar.</p>
+
+          <div class="chips" aria-label="Voorbeelden van uploads">
+            <span class="chip"><span class="mini" aria-hidden="true">🏦</span> Bank CSV</span>
+            <span class="chip"><span class="mini" aria-hidden="true">📈</span> Broker export</span>
+            <span class="chip"><span class="mini" aria-hidden="true">🏠</span> WOZ / vastgoed</span>
+            <span class="chip"><span class="mini" aria-hidden="true">🪙</span> Crypto export</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 3 -->
+    <section class="screen" aria-label="Automatisch aanvullen">
+      <div class="wrap screenInner">
+        <div class="card reveal">
+          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 2</span>
+          <h2>Wij vullen aan wat kan.</h2>
+          <p>We herkennen inkomsten, waardeontwikkeling en kosten. Jij ziet alleen wat nog ontbreekt.</p>
+
+          <div class="chips" aria-label="Wat we automatisch herkennen">
+            <span class="chip"><span class="mini" aria-hidden="true">💶</span> Rente</span>
+            <span class="chip"><span class="mini" aria-hidden="true">🧾</span> Kosten</span>
+            <span class="chip"><span class="mini" aria-hidden="true">📊</span> Waardemutatie</span>
+            <span class="chip"><span class="mini" aria-hidden="true">🏷️</span> Dividend</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 4 -->
+    <section class="screen" aria-label="Controle">
+      <div class="wrap screenInner">
+        <div class="card reveal">
+          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 3</span>
+          <h2>Controleer alleen afwijkingen.</h2>
+          <p>Klopt iets niet? Pas het aan. Alles blijft herleidbaar.</p>
+
+          <div class="chips" aria-label="Rustige controles">
+            <span class="chip"><span class="mini" aria-hidden="true">✅</span> Saldo‑check</span>
+            <span class="chip"><span class="mini" aria-hidden="true">⚠️</span> Missende data</span>
+            <span class="chip"><span class="mini" aria-hidden="true">🔎</span> Bron bekijken</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 5 -->
+    <section class="screen" aria-label="Export">
+      <div class="wrap screenInner">
+        <div class="card reveal">
+          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Klaar</span>
+          <h2>Kopieer naar je aangifte.</h2>
+          <p>Je krijgt een kort overzicht met precies de waarden die je nodig hebt in je IB‑formulier.</p>
+
+          <div class="ctaRow">
+            <button class="btn" type="button" onclick="alert('Demo: hier zou je account flow starten.')">
+              Start gratis <span aria-hidden="true">→</span>
+            </button>
+            <button class="btn btnGhost" type="button" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+              Terug naar boven
+            </button>
+          </div>
+        </div>
+
+        <div class="foot">
+          <div class="rule"></div>
+          Disclaimer: concept‑landing. Dit is een reken‑ en organiseerhulpmiddel, geen individueel belastingadvies.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
