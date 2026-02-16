@@ -128,6 +128,28 @@
       color: transparent;
       font-variant-numeric: tabular-nums;
     }
+    .heroJurist{
+      margin-top: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(11,18,32,.10);
+      box-shadow: var(--shadow2);
+      color: rgba(11,18,32,.78);
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .heroJurist img{
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      object-fit: cover;
+      object-position: center 20%;
+      border: 1px solid rgba(11,18,32,.1);
+    }
 
     /* Scroll reveal */
     .reveal{
@@ -378,6 +400,10 @@
         <h1 class="heroTitle"><span class="grad">Box 3</span> zonder gedoe</h1>
         <p class="heroSub">Ontworpen om box 3 invoer “doenbaar” te maken.</p>
         <p class="heroClaim"><span class="heroCount" id="heroCount" aria-live="polite">0%</span> sneller box 3 aangifte doen.</p>
+        <div class="heroJurist" aria-label="Legal jurist Dirk Baas">
+          <img src="assets/img/DIRKBAAS.jpg" alt="Legal jurist Dirk Baas" loading="lazy" />
+          <span>Legal jurist Dirk Baas</span>
+        </div>
       </div>
     </section>
 
