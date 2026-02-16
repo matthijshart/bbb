@@ -111,6 +111,23 @@
       margin: 0;
       max-width: 38ch;
     }
+    .heroClaim{
+      margin: 22px 0 0;
+      font-size: clamp(34px, 9vw, 62px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .heroClaim .heroCount{
+      display: inline-block;
+      min-width: 2.4ch;
+      background: linear-gradient(135deg, var(--brandA), var(--brandB));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-variant-numeric: tabular-nums;
+    }
 
     /* Scroll reveal */
     .reveal{
@@ -360,6 +377,7 @@
       <div class="wrap screenInner">
         <h1 class="heroTitle"><span class="grad">Box 3</span> zonder gedoe</h1>
         <p class="heroSub">Ontworpen om box 3 invoer “doenbaar” te maken.</p>
+        <p class="heroClaim"><span class="heroCount" id="heroCount" aria-live="polite">0%</span> sneller box 3 aangifte doen.</p>
       </div>
     </section>
 
@@ -539,6 +557,35 @@
       });
     }, { threshold: 0.28 });
     revealEls.forEach(el => io.observe(el));
+
+    // Hero count-up animation
+    const heroCountEl = document.getElementById('heroCount');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const target = 85;
+
+    if (heroCountEl){
+      if (prefersReducedMotion){
+        heroCountEl.textContent = `${target}%`;
+      } else {
+        const duration = 4400;
+        const start = performance.now();
+
+        function tick(now){
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const value = Math.round(target * eased);
+
+          heroCountEl.textContent = `${value}%`;
+
+          if (progress < 1){
+            requestAnimationFrame(tick);
+          }
+        }
+
+        requestAnimationFrame(tick);
+      }
+    }
   </script>
 </body>
 </html>
