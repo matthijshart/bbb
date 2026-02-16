@@ -6,25 +6,344 @@
   <title>Box 3 zonder gedoe</title>
   <meta name="description" content="Ontworpen om box 3 invoer doenbaar te maken." />
 
-  <!-- Icons -->
-  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="assets/img/favicon.ico" sizes="any">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png">
+  <style>
+    :root{
+      --ink: #0b1220;
+      --muted: rgba(11,18,32,.66);
 
-  <!-- PWA (optional) -->
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#f7fbff">
+      --line: rgba(11,18,32,.10);
+      --glass: rgba(255,255,255,.70);
 
-  <!-- Social preview -->
-  <meta property="og:title" content="Box 3 zonder gedoe">
-  <meta property="og:description" content="Ontworpen om box 3 invoer “doenbaar” te maken. Scroll om de flow te zien.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/img/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
+      --brandA: #0ad3b3;
+      --brandB: #6c63ff;
 
-  <link rel="stylesheet" href="assets/css/styles.css" />
+      --shadow: 0 22px 65px rgba(11,18,32,.10);
+      --shadow2: 0 12px 30px rgba(11,18,32,.08);
+
+      --radius: 22px;
+      --max: 980px;
+
+      /* iOS safe areas */
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
+
+      /* Dynamic viewport height helper (set by JS) */
+      --vh: 1vh;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 600px at 15% 0%, rgba(10,211,179,.22), transparent 60%),
+        radial-gradient(900px 600px at 85% -10%, rgba(108,99,255,.18), transparent 55%),
+        linear-gradient(180deg, #f7fbff 0%, #ffffff 55%, #ffffff 100%);
+      overflow-x:hidden;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    a:focus-visible, button:focus-visible{
+      outline:none;
+      box-shadow: 0 0 0 4px rgba(10,211,179,.25);
+      border-radius: 999px;
+    }
+
+    /* Scroll progress bar (always on top) */
+    .progressWrap{
+      position:fixed;
+      top:0; left:0; right:0;
+      z-index: 999;
+      padding-top: var(--safe-top);
+      background: rgba(247,251,255,.35);
+      backdrop-filter: blur(10px);
+    }
+    .progressTrack{
+      height: 6px;
+      background: rgba(11,18,32,.08);
+    }
+    .progressBar{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--brandA), var(--brandB));
+      border-radius: 999px;
+      transform-origin: left;
+      transition: width .08s linear;
+    }
+
+    /* Page container */
+    .wrap{
+      width: min(var(--max), calc(100% - 44px));
+      margin: 0 auto;
+    }
+
+    /* “Screens” */
+    .screen{
+      min-height: calc(var(--vh) * 100);
+      display:flex;
+      align-items:center;
+      padding: calc(18px + var(--safe-top)) 0 calc(18px + var(--safe-bottom));
+    }
+    .screenInner{
+      width:100%;
+    }
+
+    /* First screen: ONLY big text */
+    .heroTitle{
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      font-size: clamp(44px, 10vw, 72px);
+      line-height: 0.98;
+      margin: 0 0 14px;
+    }
+    .heroTitle .grad{
+      background: linear-gradient(135deg, var(--brandA), var(--brandB));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .heroSub{
+      font-size: clamp(16px, 4.2vw, 20px);
+      line-height: 1.5;
+      color: var(--muted);
+      margin: 0;
+      max-width: 38ch;
+    }
+
+    /* Scroll reveal */
+    .reveal{
+      opacity: 0;
+      transform: translateY(24px) scale(.985);
+      transition: opacity .7s ease, transform .7s cubic-bezier(.2,.9,.2,1);
+      will-change: opacity, transform;
+    }
+    .reveal.isVisible{
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Card blocks */
+    .card{
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(11,18,32,.08);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    /* Step layout: copy + desktop mock (stacks on iPhone, split on desktop) */
+    .stepGrid{
+      display:grid;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (min-width: 900px){
+      .stepGrid{
+        grid-template-columns: 1.05fr .95fr;
+        align-items: center;
+      }
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.65);
+      border: 1px solid rgba(11,18,32,.10);
+      color: rgba(11,18,32,.70);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .2px;
+    }
+    .kdot{
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--brandA), var(--brandB));
+      box-shadow: 0 0 0 6px rgba(10,211,179,.12);
+    }
+
+    h2{
+      margin: 14px 0 8px;
+      font-size: clamp(28px, 7vw, 44px);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+    p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 62ch;
+    }
+
+    /* “Step chips” */
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(11,18,32,.10);
+      color: rgba(11,18,32,.78);
+      font-weight: 750;
+      font-size: 14px;
+      box-shadow: var(--shadow2);
+    }
+    .chip .mini{
+      width: 28px; height: 28px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(10,211,179,.18), rgba(108,99,255,.14));
+      border: 1px solid rgba(11,18,32,.08);
+    }
+
+    /* Desktop mock */
+    .deskMock{
+      border-radius: 20px;
+      border: 1px solid rgba(11,18,32,.10);
+      background: rgba(255,255,255,.86);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+
+      /* entry state */
+      opacity: 0;
+      transform: translateY(18px) translateX(10px) scale(.985);
+      will-change: transform, opacity;
+    }
+    .reveal.isVisible .deskMock{
+      animation: deskEnter .65s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    .reveal.isVisible .deskMock .deskFloat{
+      animation: floaty 6.4s ease-in-out .65s infinite;
+    }
+
+    .deskTop{
+      height: 40px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 0 14px;
+      background: rgba(255,255,255,.78);
+      border-bottom: 1px solid rgba(11,18,32,.08);
+    }
+    .dots{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+    }
+    .dots span{
+      width: 10px; height: 10px;
+      border-radius: 999px;
+    }
+    .dots .r{ background: #ff5f56; }
+    .dots .y{ background: #ffbd2e; }
+    .dots .g{ background: #27c93f; }
+    .deskLabel{
+      font-weight: 850;
+      color: rgba(11,18,32,.64);
+      font-size: 12px;
+      letter-spacing: .2px;
+      margin-left: 6px;
+    }
+    .deskBody{
+      aspect-ratio: 16 / 10;
+      background: #ffffff;
+      position: relative;
+    }
+    .deskBody img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+    .deskBody:after{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(600px 220px at 20% 0%, rgba(255,255,255,.35), transparent 55%);
+      pointer-events:none;
+      mix-blend-mode: screen;
+      opacity:.55;
+    }
+
+    @keyframes deskEnter{
+      from{ opacity: 0; transform: translateY(22px) translateX(12px) scale(.98); }
+      to{ opacity: 1; transform: translateY(0) translateX(0) scale(1); }
+    }
+    @keyframes floaty{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-8px); }
+    }
+
+    /* CTA */
+    .ctaRow{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-top: 18px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor:pointer;
+      font-weight: 850;
+      letter-spacing: .1px;
+      background: linear-gradient(135deg, var(--brandA), var(--brandB));
+      color: #071118;
+      box-shadow: 0 18px 45px rgba(108,99,255,.18);
+      transition: transform .15s ease, box-shadow .15s ease;
+      user-select:none;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 22px 55px rgba(108,99,255,.22); }
+    .btnGhost{
+      background: rgba(255,255,255,.75);
+      border-color: rgba(11,18,32,.12);
+      color: rgba(11,18,32,.85);
+      box-shadow: var(--shadow2);
+    }
+
+    /* Footer */
+    .foot{
+      padding: 40px 0 calc(40px + var(--safe-bottom));
+      color: rgba(11,18,32,.62);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .foot .rule{ height:1px; background: rgba(11,18,32,.08); margin: 18px 0; }
+
+    /* iPhone-first spacing */
+    @media (min-width: 980px){
+      .wrap{ width: min(var(--max), calc(100% - 80px)); }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      .reveal{ transition:none; transform:none; opacity:1; }
+      .progressBar{ transition:none; }
+      .btn{ transition:none; }
+      .deskMock, .reveal.isVisible .deskMock{ animation:none; opacity:1; transform:none; }
+      .reveal.isVisible .deskMock .deskFloat{ animation:none; }
+    }
+  </style>
 </head>
 
 <body>
@@ -41,10 +360,6 @@
       <div class="wrap screenInner">
         <h1 class="heroTitle"><span class="grad">Box 3</span> zonder gedoe</h1>
         <p class="heroSub">Ontworpen om box 3 invoer “doenbaar” te maken.</p>
-        <p class="heroStat" aria-live="polite">
-          <span class="heroStatValue" id="heroStatValue">0%</span>
-          sneller box 3 aangifte doen
-        </p>
       </div>
     </section>
 
@@ -52,15 +367,31 @@
     <section class="screen" aria-label="Upload">
       <div class="wrap screenInner">
         <div class="card reveal">
-          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 1</span>
-          <h2>Upload je overzichten.</h2>
-          <p>Sleep je bank‑ en brokerexports in één map. Klaar.</p>
+          <div class="stepGrid">
+            <div class="stepCopy">
+              <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 1</span>
+              <h2>Upload je overzichten.</h2>
+              <p>Sleep je bank‑ en brokerexports in één map. Klaar.</p>
 
-          <div class="chips" aria-label="Voorbeelden van uploads">
-            <span class="chip"><span class="mini" aria-hidden="true">🏦</span> Bank CSV</span>
-            <span class="chip"><span class="mini" aria-hidden="true">📈</span> Broker export</span>
-            <span class="chip"><span class="mini" aria-hidden="true">🏠</span> WOZ / vastgoed</span>
-            <span class="chip"><span class="mini" aria-hidden="true">🪙</span> Crypto export</span>
+              <div class="chips" aria-label="Voorbeelden van uploads">
+                <span class="chip"><span class="mini" aria-hidden="true">🏦</span> Bank CSV</span>
+                <span class="chip"><span class="mini" aria-hidden="true">📈</span> Broker export</span>
+                <span class="chip"><span class="mini" aria-hidden="true">🏠</span> WOZ / vastgoed</span>
+                <span class="chip"><span class="mini" aria-hidden="true">🪙</span> Crypto export</span>
+              </div>
+            </div>
+
+            <figure class="deskMock" aria-label="Voorbeeld van het platform (upload)">
+              <div class="deskFloat">
+                <div class="deskTop" aria-hidden="true">
+                  <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                  <div class="deskLabel">Rendi • Upload</div>
+                </div>
+                <div class="deskBody">
+                  <img src="assets/img/step-01-upload.png" alt="Platform scherm: upload je overzichten" loading="lazy" />
+                </div>
+              </div>
+            </figure>
           </div>
         </div>
       </div>
@@ -70,15 +401,31 @@
     <section class="screen" aria-label="Automatisch aanvullen">
       <div class="wrap screenInner">
         <div class="card reveal">
-          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 2</span>
-          <h2>Wij vullen aan wat kan.</h2>
-          <p>We herkennen inkomsten, waardeontwikkeling en kosten. Jij ziet alleen wat nog ontbreekt.</p>
+          <div class="stepGrid">
+            <div class="stepCopy">
+              <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 2</span>
+              <h2>Wij vullen aan wat kan.</h2>
+              <p>Rendi herkent inkomsten, waardeontwikkeling en kosten. Jij ziet alleen wat nog ontbreekt.</p>
 
-          <div class="chips" aria-label="Wat we automatisch herkennen">
-            <span class="chip"><span class="mini" aria-hidden="true">💶</span> Rente</span>
-            <span class="chip"><span class="mini" aria-hidden="true">🧾</span> Kosten</span>
-            <span class="chip"><span class="mini" aria-hidden="true">📊</span> Waardemutatie</span>
-            <span class="chip"><span class="mini" aria-hidden="true">🏷️</span> Dividend</span>
+              <div class="chips" aria-label="Wat we automatisch herkennen">
+                <span class="chip"><span class="mini" aria-hidden="true">💶</span> Rente</span>
+                <span class="chip"><span class="mini" aria-hidden="true">🧾</span> Kosten</span>
+                <span class="chip"><span class="mini" aria-hidden="true">📊</span> Waardemutatie</span>
+                <span class="chip"><span class="mini" aria-hidden="true">🏷️</span> Dividend</span>
+              </div>
+            </div>
+
+            <figure class="deskMock" aria-label="Voorbeeld van het platform (automatisch)">
+              <div class="deskFloat">
+                <div class="deskTop" aria-hidden="true">
+                  <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                  <div class="deskLabel">Rendi • Automatisch</div>
+                </div>
+                <div class="deskBody">
+                  <img src="assets/img/step-02-aanvullen.png" alt="Platform scherm: automatisch aanvullen" loading="lazy" />
+                </div>
+              </div>
+            </figure>
           </div>
         </div>
       </div>
@@ -88,14 +435,30 @@
     <section class="screen" aria-label="Controle">
       <div class="wrap screenInner">
         <div class="card reveal">
-          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 3</span>
-          <h2>Controleer alleen afwijkingen.</h2>
-          <p>Klopt iets niet? Pas het aan. Alles blijft herleidbaar.</p>
+          <div class="stepGrid">
+            <div class="stepCopy">
+              <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 3</span>
+              <h2>Controleer alleen afwijkingen.</h2>
+              <p>Klopt iets niet? Pas het aan. Alles is herleidbaar, zodat je weet waar een getal vandaan komt.</p>
 
-          <div class="chips" aria-label="Rustige controles">
-            <span class="chip"><span class="mini" aria-hidden="true">✅</span> Saldo‑check</span>
-            <span class="chip"><span class="mini" aria-hidden="true">⚠️</span> Missende data</span>
-            <span class="chip"><span class="mini" aria-hidden="true">🔎</span> Bron bekijken</span>
+              <div class="chips" aria-label="Rustige controles">
+                <span class="chip"><span class="mini" aria-hidden="true">✅</span> Saldo‑check</span>
+                <span class="chip"><span class="mini" aria-hidden="true">⚠️</span> Missende data</span>
+                <span class="chip"><span class="mini" aria-hidden="true">🔎</span> Bron bekijken</span>
+              </div>
+            </div>
+
+            <figure class="deskMock" aria-label="Voorbeeld van het platform (controle)">
+              <div class="deskFloat">
+                <div class="deskTop" aria-hidden="true">
+                  <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                  <div class="deskLabel">Rendi • Controle</div>
+                </div>
+                <div class="deskBody">
+                  <img src="assets/img/step-03-controle.png" alt="Platform scherm: controle van afwijkingen" loading="lazy" />
+                </div>
+              </div>
+            </figure>
           </div>
         </div>
       </div>
@@ -105,28 +468,77 @@
     <section class="screen" aria-label="Export">
       <div class="wrap screenInner">
         <div class="card reveal">
-          <span class="kicker"><span class="kdot" aria-hidden="true"></span> Klaar</span>
-          <h2>Kopieer naar je aangifte.</h2>
-          <p>Je krijgt een kort overzicht met precies de waarden die je nodig hebt in je IB‑formulier.</p>
+          <div class="stepGrid">
+            <div class="stepCopy">
+              <span class="kicker"><span class="kdot" aria-hidden="true"></span> Klaar</span>
+              <h2>Kopieer naar je aangifte.</h2>
+              <p>Je krijgt een kort overzicht met precies de waarden die je nodig hebt in je IB‑formulier.</p>
 
-          <div class="ctaRow">
-            <button class="btn" type="button" onclick="alert('Demo: hier zou je account flow starten.')">
-              Start gratis <span aria-hidden="true">→</span>
-            </button>
-            <button class="btn btnGhost" type="button" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-              Terug naar boven
-            </button>
+              <div class="ctaRow">
+                <button class="btn" type="button" onclick="alert('Demo: hier zou je account flow starten.')">
+                  Start gratis
+                  <span aria-hidden="true">→</span>
+                </button>
+                <button class="btn btnGhost" type="button" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                  Terug naar boven
+                </button>
+              </div>
+            </div>
+
+            <figure class="deskMock" aria-label="Voorbeeld van het platform (export)">
+              <div class="deskFloat">
+                <div class="deskTop" aria-hidden="true">
+                  <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                  <div class="deskLabel">Rendi • Export</div>
+                </div>
+                <div class="deskBody">
+                  <img src="assets/img/step-04-export.png" alt="Platform scherm: export / kopieer-klare waarden" loading="lazy" />
+                </div>
+              </div>
+            </figure>
           </div>
         </div>
 
         <div class="foot">
           <div class="rule"></div>
-          Disclaimer: concept‑landing. Dit is een reken‑ en organiseerhulpmiddel, geen individueel belastingadvies.
+          Disclaimer: concept‑landing. Rendi is een reken‑ en organiseerhulpmiddel, geen individueel belastingadvies.
         </div>
       </div>
     </section>
   </main>
 
-  <script src="assets/js/app.js"></script>
+  <script>
+    // Fix iOS 100vh issues (address bar) by using --vh
+    function setVh(){
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+
+    // Scroll progress bar
+    const progressBar = document.getElementById('progressBar');
+    function updateProgress(){
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop || 0;
+      const scrollHeight = doc.scrollHeight - window.innerHeight;
+      const p = scrollHeight > 0 ? (scrollTop / scrollHeight) : 0;
+      progressBar.style.width = (p * 100).toFixed(2) + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // Reveal on scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('isVisible');
+        }
+      });
+    }, { threshold: 0.28 });
+    revealEls.forEach(el => io.observe(el));
+  </script>
 </body>
 </html>
