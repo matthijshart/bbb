@@ -108,8 +108,21 @@
       font-size: clamp(16px, 4.2vw, 20px);
       line-height: 1.5;
       color: var(--muted);
-      margin: 0;
+      margin: 0 0 14px;
       max-width: 38ch;
+    }
+    .heroTrust{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(11,18,32,.12);
+      box-shadow: var(--shadow2);
+      font-size: 14px;
+      font-weight: 800;
+      color: rgba(11,18,32,.84);
     }
 
     /* Scroll reveal */
@@ -360,6 +373,10 @@
       <div class="wrap screenInner">
         <h1 class="heroTitle"><span class="grad">Box 3</span> zonder gedoe</h1>
         <p class="heroSub">Ontworpen om box 3 invoer “doenbaar” te maken.</p>
+        <p class="heroTrust" aria-label="Beveiligingsbelofte">
+          <span aria-hidden="true">🔒</span>
+          Al je data is standaard versleuteld en beschermd.
+        </p>
       </div>
     </section>
 
@@ -371,7 +388,7 @@
             <div class="stepCopy">
               <span class="kicker"><span class="kdot" aria-hidden="true"></span> Stap 1</span>
               <h2>Upload je overzichten.</h2>
-              <p>Sleep je bank‑ en brokerexports in één map. Klaar.</p>
+              <p>Sleep je bank‑ en brokerexports in één map. Klaar. Alles blijft beschermd met versleutelde opslag en transport.</p>
 
               <div class="chips" aria-label="Voorbeelden van uploads">
                 <span class="chip"><span class="mini" aria-hidden="true">🏦</span> Bank CSV</span>
